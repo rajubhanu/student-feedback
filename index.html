@@ -22,11 +22,11 @@
       border-radius: 16px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       width: 100%;
-      max-width: 450px;
+      max-width: 500px;
     }
     h2 { text-align: center; margin-bottom: 25px; }
     label { font-weight: 600; margin-top: 12px; display: block; }
-    input[type="text"], input[type="number"], textarea, select {
+    input[type="text"], textarea, select {
       width: 100%; padding: 10px; margin-top: 5px;
       border: 1px solid #ccc; border-radius: 8px; font-size: 14px;
     }
@@ -46,15 +46,12 @@
       font-weight: bold;
       border-radius: 6px;
     }
-
-    /* Themes */
     body.light { background: #f2f6ff; color: #000; }
     body.dark { background: #121212; color: #fff; }
     body.pink { background: #ffe6f0; color: #880e4f; }
     body.green { background: #e0f2f1; color: #004d40; }
     body.skyblue { background: #e0f7fa; color: #01579b; }
 
-    /* Dark Theme Custom Fields */
     body.dark input,
     body.dark textarea,
     body.dark select {
@@ -62,18 +59,11 @@
       color: #000000;
       border: 1px solid #00aaff;
     }
-    body.dark input:focus,
-    body.dark textarea:focus,
-    body.dark select:focus {
-      border: 1px solid #00aaff;
-      box-shadow: 0 0 5px #00aaff;
-    }
     body.dark label,
     body.dark h2 {
       color: #00aaff !important;
     }
 
-    /* Skyblue Theme Fields */
     body.skyblue input,
     body.skyblue textarea,
     body.skyblue select {
@@ -81,35 +71,16 @@
       color: #01579b;
       border: 1px solid #40c4ff;
     }
-    body.skyblue input:focus,
-    body.skyblue textarea:focus,
-    body.skyblue select:focus {
-      border: 1px solid #40c4ff;
-      box-shadow: 0 0 5px #40c4ff;
-    }
     body.skyblue label,
     body.skyblue h2 {
       color: #0288d1 !important;
     }
-html, body {
-  height: 100%;
-}
 
-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-footer {
-  margin-top: auto;
-  text-align: center;
-  padding: 20px;
-  font-size: 15px;
-  font-weight: bold;
-}
-
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body class="light">
@@ -132,32 +103,72 @@ footer {
       <label>Roll No</label>
       <input type="text" name="rollno" placeholder="Ex: 21CS001" required>
 
-      <label>Subject</label>
-      <select name="subject" required>
-        <option value="">-- Select Subject --</option>
-        <option value="C">C</option>
-        <option value="Python">Python</option>
-        <option value="Java">Java</option>
-        <option value="DBMS">DBMS</option>
-        <option value="Web Development">Web Development</option>
+      <label>Year</label>
+      <select name="year" id="year" onchange="updateSubjects()" required>
+        <option value="">-- Select Year --</option>
+        <option value="Ist Year">1st Year</option>
+        <option value="IInd Year">2nd Year</option>
+        <option value="IIIrd Year">3rd Year</option>
+        <option value="IVth Year">4th Year</option>
       </select>
 
-      <label>Rating (1-5)</label>
-      <input type="number" name="rating" min="1" max="5" placeholder="Enter rating" required>
+      <label>Semester</label>
+      <select name="semester" required>
+        <option value="">-- Select Semester --</option>
+        <option value="Ist Sem">I Sem</option>
+        <option value="IInd Sem">II Sem</option>
+      </select>
+
+      <label>Subject</label>
+      <select name="subject" id="subject" required>
+        <option value="">-- Select Subject --</option>
+      </select>
+
+      <label>Rating (with Points)</label>
+      <select name="rating" required>
+        <option value="">-- Select Rating --</option>
+        <option value="1">1 - Bad</option>
+        <option value="2">2 - Poor</option>
+        <option value="3">3 - Good</option>
+        <option value="4">4 - Very Good</option>
+        <option value="5">5 - Excellent</option>
+      </select>
 
       <label>Comments</label>
       <textarea name="comments" rows="4" placeholder="Write your suggestions here..."></textarea>
 
       <input type="submit" value="Submit Feedback">
     </form>
+    <footer>
+      <span style="color: red;">Developed By</span> <span style="color: #007bff;">Bingi Raju 💻</span>
+    </footer>
   </div>
-<footer>
-  <span style="color: red;">Developed By</span> <span style="color: #007bff;"> Bingi Raju 💻</span>
-</footer>
 
   <script>
     function changeTheme(theme) {
       document.body.className = theme;
+    }
+
+    function updateSubjects() {
+      const year = document.getElementById('year').value;
+      const subjectSelect = document.getElementById('subject');
+      subjectSelect.innerHTML = '<option value="">-- Select Subject --</option>';
+
+      const subjectsByYear = {
+        "Ist Year": ["C", "Python", "Mathematics"],
+        "IInd Year": ["DBMS", "Java", "Operating Systems"],
+        "IIIrd Year": ["Web Technology", "Computer Networks", "Software Engineering"],
+        "IVth Year": ["AI", "ML", "IoT"]
+      };
+
+      if (subjectsByYear[year]) {
+        subjectsByYear[year].forEach(subject => {
+          const option = document.createElement('option');
+          option.value = subject;
+          option.textContent = subject;
+          subjectSelect.appendChild(option);
+        });
+      }
     }
   </script>
 </body>
