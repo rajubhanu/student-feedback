@@ -40,8 +40,12 @@ $result = mysqli_query($conn, "SELECT * FROM feedbacks ORDER BY id DESC");
       font-size: 32px;
       text-align: center;
     }
-    .theme-selector, .subject-filter {
+    .filter-container {
       margin: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
     }
     label {
       font-weight: bold;
@@ -123,30 +127,53 @@ $result = mysqli_query($conn, "SELECT * FROM feedbacks ORDER BY id DESC");
 </head>
 <body class="light">
 
-  <div class="theme-selector">
-    <label for="theme">🎨 Theme:</label>
-    <select id="theme" onchange="changeTheme(this.value)">
-      <option value="light">🌞 Light</option>
-      <option value="dark">🌙 Dark</option>
-      <option value="pink">💖 Pink</option>
-      <option value="green">🟢 Green</option>
-      <option value="skyblue">☁️ Sky Blue</option>
-    </select>
-  </div>
+  <div class="filter-container">
+    <div class="theme-selector">
+      <label for="theme">🎨 Theme:</label>
+      <select id="theme" onchange="changeTheme(this.value)">
+        <option value="light">🌞 Light</option>
+        <option value="dark">🌙 Dark</option>
+        <option value="pink">💖 Pink</option>
+        <option value="green">🟢 Green</option>
+        <option value="skyblue">☁️ Sky Blue</option>
+      </select>
+    </div>
 
-  <div class="subject-filter">
-    <label for="subjectFilter">📚 Filter by Subject:</label>
-    <select id="subjectFilter" onchange="filterSubject(this.value)">
-      <option value="">All Subjects</option>
-      <option value="C">C</option>
-      <option value="Python">Python</option>
-      <option value="Java">Java</option>
-      <option value="DBMS">DBMS</option>
-      <option value="Web Development">Web Development</option>
-    </select>
+    <div class="subject-filter">
+      <label for="subjectFilter">📚 Subject:</label>
+      <select id="subjectFilter" onchange="applyFilters()">
+        <option value="">All</option>
+        <option value="C">C</option>
+        <option value="Python">Python</option>
+        <option value="Java">Java</option>
+        <option value="DBMS">DBMS</option>
+        <option value="Web Development">Web Development</option>
+      </select>
+    </div>
+
+    <div class="year-filter">
+      <label for="yearFilter">📅 Year:</label>
+      <select id="yearFilter" onchange="applyFilters()">
+        <option value="">All</option>
+        <option value="Ist Year">1st Year</option>
+        <option value="IInd Year">2nd Year</option>
+        <option value="IIIrd Year">3rd Year</option>
+        <option value="IVth Year">4th Year</option>
+      </select>
+    </div>
+
+    <div class="sem-filter">
+      <label for="semFilter">🏫 Semester:</label>
+      <select id="semFilter" onchange="applyFilters()">
+        <option value="">All</option>
+        <option value="Ist Sem">I Sem</option>
+        <option value="IInd Sem">II Sem</option>
+      </select>
+    </div>
   </div>
 
   <h2>📋 Submitted Feedbacks</h2>
+
   <div class="table-container">
     <table id="feedbackTable">
       <thead>
@@ -155,6 +182,8 @@ $result = mysqli_query($conn, "SELECT * FROM feedbacks ORDER BY id DESC");
           <th>Name</th>
           <th>Roll No</th>
           <th>Subject</th>
+          <th>Year</th>
+          <th>Semester</th>
           <th>Rating</th>
           <th>Comments</th>
         </tr>
@@ -166,6 +195,8 @@ $result = mysqli_query($conn, "SELECT * FROM feedbacks ORDER BY id DESC");
           <td><?php echo htmlspecialchars($row['name']); ?></td>
           <td><?php echo htmlspecialchars($row['rollno']); ?></td>
           <td><?php echo htmlspecialchars($row['subject']); ?></td>
+          <td><?php echo htmlspecialchars($row['year']); ?></td>
+          <td><?php echo htmlspecialchars($row['semester']); ?></td>
           <td><?php echo $row['rating']; ?></td>
           <td><?php echo nl2br(htmlspecialchars($row['comments'])); ?></td>
         </tr>
@@ -180,17 +211,26 @@ $result = mysqli_query($conn, "SELECT * FROM feedbacks ORDER BY id DESC");
   </footer>
 
   <script>
+    let dataTable;
+
     function changeTheme(theme) {
       document.body.className = theme;
     }
 
-    function filterSubject(subject) {
-      const table = $('#feedbackTable').DataTable();
-      table.column(3).search(subject).draw();
+    function applyFilters() {
+      const subject = $('#subjectFilter').val();
+      const year = $('#yearFilter').val();
+      const semester = $('#semFilter').val();
+
+      dataTable
+        .column(3).search(subject)
+        .column(4).search(year)
+        .column(5).search(semester)
+        .draw();
     }
 
     $(document).ready(function () {
-      $('#feedbackTable').DataTable({
+      dataTable = $('#feedbackTable').DataTable({
         dom: 'Bfrtip',
         buttons: ['copy', 'excelHtml5', 'pdfHtml5', 'print']
       });
