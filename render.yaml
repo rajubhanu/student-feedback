@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: student-feedback
+    env: php
+    plan: free
+    buildCommand: ""
+    startCommand: ""
+    rootDir: .
